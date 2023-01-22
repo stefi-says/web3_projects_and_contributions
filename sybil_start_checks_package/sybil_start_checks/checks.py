@@ -1,18 +1,12 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime 
-import requests 
-
+import requests
 
 def first_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish):
 
     session = requests.Session() 
     session.auth = (api_key, '') 
-    df_eth_1 = []
-    df_eth_1 = pd.DataFrame(df_eth_1, columns = ['block_signed_at', 'block_height', 'tx_hash', 'tx_offset', 'successful',
-           'from_address', 'from_address_label', 'to_address', 'to_address_label',
-           'value', 'value_quote', 'gas_offered', 'gas_spent', 'gas_price',
-           'fees_paid', 'gas_quote', 'gas_quote_rate']) #preciso fazer esse df?
 
     response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true&page-number=1&page-size=1')
     
@@ -37,12 +31,6 @@ def wallet_initiated(wallet_id, api_key, chain_id, list_for_testing):
     
         session = requests.Session() 
         session.auth = (api_key, '') 
-        df_eth_1 = []
-        df_eth_1 = pd.DataFrame(df_eth_1, columns = ['block_signed_at', 'block_height', 'tx_hash', 'tx_offset', 'successful',
-           'from_address', 'from_address_label', 'to_address', 'to_address_label',
-           'value', 'value_quote', 'gas_offered', 'gas_spent', 'gas_price',
-           'fees_paid', 'gas_quote', 'gas_quote_rate']) #preciso fazer esse df?
-
         response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true')
     
         first_trx= response.json()['data']['items']
@@ -66,12 +54,6 @@ def trx_between_donnors(wallet_id, api_key, chain_id, list_of_donnors):
 
         session = requests.Session() 
         session.auth = (api_key, '') 
-        df_eth_1 = []
-        df_eth_1 = pd.DataFrame(df_eth_1, columns = ['block_signed_at', 'block_height', 'tx_hash', 'tx_offset', 'successful',
-               'from_address', 'from_address_label', 'to_address', 'to_address_label',
-           'value', 'value_quote', 'gas_offered', 'gas_spent', 'gas_price',
-           'fees_paid', 'gas_quote', 'gas_quote_rate']) #preciso fazer esse df?
-
         response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true')
     
         trx_data= response.json()['data']['items']
@@ -104,12 +86,6 @@ def donnors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_fi
 
         session = requests.Session() 
         session.auth = (api_key, '') 
-        df_eth_1 = []
-        df_eth_1 = pd.DataFrame(df_eth_1, columns = ['block_signed_at', 'block_height', 'tx_hash', 'tx_offset', 'successful',
-                       'from_address', 'from_address_label', 'to_address', 'to_address_label',
-                   'value', 'value_quote', 'gas_offered', 'gas_spent', 'gas_price',
-                   'fees_paid', 'gas_quote', 'gas_quote_rate']) #preciso fazer esse df?
-
         response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true')
 
         trx_data= response.json()['data']['items']
@@ -143,4 +119,33 @@ def donnors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_fi
 
 
         return pd.Series(list_for_testing).isin(all_wallets).sum() > 0
+    
+    
+
+def wallet_historical_trx(wallets_list , api_key, chain_id):
+
+        trx = []
+    
+        for i in range(len(wallets_list)):
+
+            wallet_id = wallets_list[i]
+            session = requests.Session() 
+            session.auth = (api_key, '') 
+            response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true')
+    
+            w_trx= response.json()['data']['items']
+            trx.extend(w_trx)
+               
+        df_trx = []
+        df_trx = pd.DataFrame(df_trx, columns = ['block_signed_at', 'block_height', 'tx_hash', 'tx_offset', 'successful',
+                       'from_address', 'from_address_label', 'to_address', 'to_address_label',
+                   'value', 'value_quote', 'gas_offered', 'gas_spent', 'gas_price',
+                   'fees_paid', 'gas_quote', 'gas_quote_rate']) 
+
+        for i in range(len(trx)):
+    
+            trx_obj = pd.DataFrame(trx[i].items()).set_index(0).transpose()
+            df_trx = pd.concat([df_trx,trx_obj], axis = 0)
+
+        return df_trx.reset_index(drop = True)
     
