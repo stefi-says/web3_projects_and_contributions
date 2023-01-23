@@ -1,4 +1,4 @@
-# Sybil Start Check Packge Docs 
+# Sybil Start Check Package Docs 
 
 ### Intro
 
