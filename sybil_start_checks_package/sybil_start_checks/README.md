@@ -1,17 +1,21 @@
-# Sybil Start Check Package 
+# Sybil  Checks Package 
+
+`pip install SybilChecks`
+
+` from SybilChecks import checks`
 
 ### Intro
 
-This package was developed during ODC Data Builders Hackathon on Jan-2023, [OpenData Community](https://opendatacommunity.org/) . It intends to make it easier to do first basic checks on donors of public funds rounds. It can integrate systems of risk analysis as a ‘Lego’ for feature engineering or as a start for further data analysis on wallets. It cointans 5 modules, 4 of them tests behaviours and flags booleans outputs for the behaviour tested ,and 1 returns a dataset of historical transactional data till the current date. 
+This package was developed during ODC Data Builders Hackathon on Jan-2023, [OpenData Community](https://opendatacommunity.org/) . It intends to make it easier to do first basic checks on donors of public funds rounds. It can integrate systems of risk analysis as a ‘Lego’ for feature engineering or as a start for further data analysis on wallets. It cointans 5 functions, 4 of them tests behaviours and flags booleans outputs for the behaviour tested ,and 1 returns a dataset of historical transactional data till the current date. 
 
 The idea is to make it easier to do basic tests around participants and flags suspicious behaviours that could culminate in Sybil identification. 
 
 
 ### How it works
 
-The package was created using [Covalent API](https://www.covalenthq.com/docs/api/#/0/0/USD/1)  therefore it is imperative that the users get an [<api_key>](https://www.covalenthq.com/) , as it is a necessary  variable on every module. 
+The package was created using [Covalent API](https://www.covalenthq.com/docs/api/#/0/0/USD/1)  therefore it is imperative that the users get an [<api_key>](https://www.covalenthq.com/) , as it is a necessary  variable on every function. 
 
-Modules variables :     
+Functions variables :     
 	*wallet_id* = type: ‘str’ , wallet address that will be evaluated    
 	*api_key* = type: ‘str’ , your covalent api_key   
 	*chain_id* = type: ‘str’ ,covalent id for the network you want the historical transactions    
@@ -23,7 +27,7 @@ Modules variables :
 
 
 
-### Modules:     
+### Fuctions:     
 
 
 `first_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish)`:      
@@ -52,10 +56,10 @@ Modules variables :
 
 ### Further development:    
 
-The package has little study around time optimization due to hackathon time constraints. It can be slow when used to check a lot of wallets  owing to  making one API call for each ‘check’. Further development would include:       
+The package has little study around time optimization due to hackathon time constraints. It can be slow when used to check a lot of wallets  owing to  making one API call for each function ‘check’. Further development would include:       
 
-  * modules to import and treat a dataset and use it to retrieve the ‘checks’ for the other modules.
-  * One module that builds and processes networks and returns network metrics as degree of centrality, closeness and so on .. 
+  * modules to import and treat a dataset and use it to retrieve the validations for the other modules.
+  * One module that builds and processes networks algorithms and returns network metrics as degree of centrality, closeness and so on .. 
 
 
 ### Acknowledgements to:    
