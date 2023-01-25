@@ -9,7 +9,7 @@ You will also find the datasets used to perform this analyses:
 a dataset that contains the voters wallets and the answer for the checks made on them:    
 `clima_solution_first_checks.csv`
 
- and finally a dataset produce with SybilChecks package function `checks.wallet_historical_trx()` , that contains all the historical transactional data of all the wallets involved on the round (voters and grantees) using the Ethereum Network: 
+ and finally a dataset produce with SybilChecks package function `checks.wallet_historical_trx()` , that contains all the historical transactional data of all the wallets involved on the round (voters and grantees) using the Ethereum Network:   
 `clima_solution_wallets_trx.csv`
 
 Any feedback, please contact me :) 
