@@ -21,8 +21,7 @@ Functions variables :
 	*chain_id* = type: ‘str’, covalent id for the network you want the historical transactions    
 	*round_start* = type: ‘str’, format : ‘%Y-%m-%d’,  date of the round start or date when the round was announced. Example : ‘2022-12-05’   
   *round_finish* =  type: ‘str’, format : ‘%Y-%m-%d’,  date of the round end or date when donors were not able to make donations anymore. Example : ‘2022-12-31’    
-  *list_for_testing* = type : ‘list’, present on the `wallet_initiated ` module, it should contain a list of unique wallet addresses of donors and grantees but not the wallet tested .   
-  *list_of_donors* =  type : ‘list’, present on the `trx_between_donors`  module, it should contain a list of unique wallet addresses of donors .    
+  *list_for_testing* = type : ‘list’, present on the `wallet_initiated ` module, it should contain a list of unique wallet addresses of donors and grantees but not the wallet tested .     
   *wallets_lists* = type : ‘list’, present on the `wallet_historical_trx`  module, it should contains all wallets address that is intended to get the lifetime transactional data on the specified `chain_id`   
 
 
