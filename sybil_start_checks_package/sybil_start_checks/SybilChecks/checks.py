@@ -70,7 +70,7 @@ def wallet_initiated(wallet_id, api_key, chain_id, list_for_testing):
     
 
 
-def trx_between_donors(wallet_id, api_key, chain_id, list_of_donors):
+def trx_between_donors(wallet_id, api_key, chain_id, list_for_testing):
     
 
         session = requests.Session() 
