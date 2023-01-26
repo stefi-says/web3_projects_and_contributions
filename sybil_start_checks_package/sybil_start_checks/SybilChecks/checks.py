@@ -4,22 +4,32 @@ from datetime import datetime
 import requests
 
 def first_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish):
-
+    wallets = []
+    answers = []
+    
     session = requests.Session() 
     session.auth = (api_key, '') 
 
-    response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true&page-number=1&page-size=1')
+    response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true')
     
-    first_trx= response.json()['data']['items'][0]['block_signed_at']
-    first_trx = first_trx.split("T")[0]
-    first_trx  = datetime.strptime(first_trx , '%Y-%m-%d')
+    if ((response.status_code == 200) & (len(response.json()['data']['items']) != 0)) == True:
+        
+        first_trx= response.json()['data']['items'][0]['block_signed_at']
+        first_trx = first_trx.split("T")[0]
+        first_trx  = datetime.strptime(first_trx , '%Y-%m-%d')
 
-    round_start = datetime.strptime( round_start , '%Y-%m-%d')
-    round_finish  = datetime.strptime(round_finish , '%Y-%m-%d')
+        round_start = datetime.strptime( round_start , '%Y-%m-%d')
+        round_finish  = datetime.strptime(round_finish , '%Y-%m-%d')
     
+        answers.append(round_start <= first_trx <= round_finish)
+        wallets.append(wallet_id)
     
-    
-    return round_start <= first_trx <= round_finish
+    else: 
+        
+        wallets.append(wallet_id)
+        answers.append('no data on this chain')
+        
+    return [wallets[0], answers[0]]
 
 
 
@@ -32,18 +42,29 @@ def wallet_initiated(wallet_id, api_key, chain_id, list_for_testing):
         session = requests.Session() 
         session.auth = (api_key, '') 
         response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true')
-    
-        first_trx= response.json()['data']['items']
-
-        initiated_by = []
-        for i in range(len(first_trx)): 
-            if (first_trx[i]['successful'] == True) and (int(first_trx[i]['value']) != 0): 
-                received_from  = first_trx[i]['from_address']
-                initiated_by.append(received_from)
-                break
+        
+        if ((response.status_code == 200) & (len(response.json()['data']['items']) != 0)) == True:
+        
+            answers= []
+            first_trx= response.json()['data']['items']
+            initiated_by = []
             
-
-        return pd.Series(list_for_testing).isin(initiated_by).unique().sum() >0  
+            for i in range(len(first_trx)): 
+                if (first_trx[i]['successful'] == True) and (int(first_trx[i]['value']) != 0): 
+                    received_from  = first_trx[i]['from_address']
+                    initiated_by.append(received_from)
+           
+            
+            answers.append(pd.Series(list_for_testing).isin(initiated_by).unique().sum() >0)
+            
+        else: 
+        
+            answers = []
+            answers.append('no data on this chain')
+        
+    
+        return [wallet_id, answers]
+     
     
     
     
@@ -55,33 +76,45 @@ def trx_between_donnors(wallet_id, api_key, chain_id, list_of_donnors):
         session = requests.Session() 
         session.auth = (api_key, '') 
         response = session.get(f'https://api.covalenthq.com/v1/{chain_id}/address/{wallet_id}/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=true&no-logs=true')
+      
+        
+        if ((response.status_code == 200) & (len(response.json()['data']['items']) != 0)) == True:
+            
+            answers = []
+           
+            trx_data= response.json()['data']['items']
+
+            received_trx = []
+            destination_trx = []
+            for i in range(len(trx_data)):
+                    if trx_data[i]['from_address'] != wallet_id:
+                        received_from  = trx_data[i]['from_address']
+                        received_trx.append(received_from)
+
+
+            for i in range(len(trx_data)):
+                    if trx_data[i]['to_address'] != wallet_id:
+                        sended_to  = trx_data[i]['to_address']
+                        destination_trx.append(sended_to)
+
+            received_wallets = np.unique(received_trx)
+            destination_wallets = np.unique(destination_trx)
+
+            all_wallets = list(received_wallets) + list(destination_wallets)
+
+            answers.append(pd.Series(list_for_testing).isin(all_wallets).sum() > 0 )
+       
+        else: 
+        
+            answers = []
+            answers.append('no data on this chain')
+        
     
-        trx_data= response.json()['data']['items']
-
-        received_trx = []
-        destination_trx = []
-        for i in range(len(trx_data)):
-                if trx_data[i]['from_address'] != wallet_id:
-                    received_from  = trx_data[i]['from_address']
-                    received_trx.append(received_from)
-
-
-        for i in range(len(trx_data)):
-                if trx_data[i]['to_address'] != wallet_id:
-                    sended_to  = trx_data[i]['to_address']
-                    destination_trx.append(sended_to)
-
-        received_wallets = np.unique(received_trx)
-        destination_wallets = np.unique(destination_trx)
-
-        all_wallets = list(received_wallets) + list(destination_wallets)
-
-
-        return pd.Series(list_for_testing).isin(all_wallets).sum() > 0 
+        return [wallet_id, answers[0]] 
     
     
     
-def donnors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish, list_of_donnors):
+def donnors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish, list_for_testing):
 
 
         session = requests.Session() 
@@ -90,35 +123,45 @@ def donnors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_fi
 
         trx_data= response.json()['data']['items']
 
+        if ((response.status_code == 200) & (len(response.json()['data']['items']) != 0)) == True:
+            answers = []
+            
+            round_start = datetime.strptime(round_start, '%Y-%m-%d')
+            round_finish = datetime.strptime(round_finish, '%Y-%m-%d')
 
-        round_start = datetime.strptime(round_start, '%Y-%m-%d')
-        round_finish = datetime.strptime(round_finish, '%Y-%m-%d')
+            received_trx = []
+            destination_trx = []
+            for i in range(len(trx_data)):
 
-        received_trx = []
-        destination_trx = []
-        for i in range(len(trx_data)):
-
-                if (round_start <= datetime.strptime(trx_data[i]['block_signed_at']
+                    if (round_start <= datetime.strptime(trx_data[i]['block_signed_at']
                                                      .split('T')[0], '%Y-%m-%d') < round_finish) == True:
 
-                    if (trx_data[i]['from_address'] != wallet_id) == True:
-                        received_from  = trx_data[i]['from_address']
-                        received_trx.append(received_from)          
+                        if (trx_data[i]['from_address'] != wallet_id) == True:
+                            received_from  = trx_data[i]['from_address']
+                            received_trx.append(received_from)          
 
-                    else:
-                        sended_to  = trx_data[i]['to_address']
-                        destination_trx.append(sended_to) 
-
-
+                        else:
+                            sended_to  = trx_data[i]['to_address']
+                            destination_trx.append(sended_to) 
 
 
-        received_wallets = np.unique(received_trx)
-        destination_wallets = np.unique(destination_trx)
-
-        all_wallets = list(received_wallets) + list(destination_wallets)
 
 
-        return pd.Series(list_for_testing).isin(all_wallets).sum() > 0
+            received_wallets = np.unique(received_trx)
+            destination_wallets = np.unique(destination_trx)
+
+            all_wallets = list(received_wallets) + list(destination_wallets)
+
+            answers.append(pd.Series(list_for_testing).isin(all_wallets).sum() > 0)
+            
+        else: 
+        
+            answers = []
+            answers.append('no data on this chain')
+        
+    
+        return [wallet_id, answers[0]]
+ 
     
     
 
