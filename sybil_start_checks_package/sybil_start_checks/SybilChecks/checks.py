@@ -70,7 +70,7 @@ def wallet_initiated(wallet_id, api_key, chain_id, list_for_testing):
     
 
 
-def trx_between_donnors(wallet_id, api_key, chain_id, list_of_donnors):
+def trx_between_donors(wallet_id, api_key, chain_id, list_of_donors):
     
 
         session = requests.Session() 
@@ -114,7 +114,7 @@ def trx_between_donnors(wallet_id, api_key, chain_id, list_of_donnors):
     
     
     
-def donnors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish, list_for_testing):
+def donors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish, list_for_testing):
 
 
         session = requests.Session() 
