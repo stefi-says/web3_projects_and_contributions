@@ -41,7 +41,7 @@ This could be done in different moments for different relations
 
 ## How it works
 
-The package was created using [Covalent API](https://www.covalenthq.com/docs/api/#/0/0/USD/1)  therefore it is imperative that the users get an [<api_key>](https://www.covalenthq.com/) , as it is a necessary  variable on every function. 
+The package was created using [Covalent API](https://www.covalenthq.com/docs/api/#/0/0/USD/1), a decentrilized network of nodes, therefore it is imperative that the users get an [<api_key>](https://www.covalenthq.com/) , as it is a necessary  variable on every function. 
 
 ### Functions variables :   
 
