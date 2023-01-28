@@ -37,7 +37,7 @@ def first_trx_during_round(wallet_id, api_key, chain_id, round_start, round_fini
 
     
     
-def wallet_initiated(wallet_id, api_key, chain_id, list_for_testing):
+def wallet_initiated_by(wallet_id, api_key, chain_id, list_for_testing):
     
         session = requests.Session() 
         session.auth = (api_key, '') 
@@ -63,14 +63,14 @@ def wallet_initiated(wallet_id, api_key, chain_id, list_for_testing):
             answers.append('no data on this chain')
         
     
-        return [wallet_id, answers]
+        return [wallet_id, answers[0]]
      
     
     
     
 
 
-def trx_between_donors(wallet_id, api_key, chain_id, list_for_testing):
+def trx_between_wallets(wallet_id, api_key, chain_id, list_for_testing):
     
 
         session = requests.Session() 
@@ -93,7 +93,7 @@ def trx_between_donors(wallet_id, api_key, chain_id, list_for_testing):
 
 
             for i in range(len(trx_data)):
-                    if trx_data[i]['to_address'] != wallet_id:
+                    if (trx_data[i]['to_address'] != wallet_id) & (trx_data[i]['to_address'] != None):
                         sended_to  = trx_data[i]['to_address']
                         destination_trx.append(sended_to)
 
@@ -114,7 +114,7 @@ def trx_between_donors(wallet_id, api_key, chain_id, list_for_testing):
     
     
     
-def donors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish, list_for_testing):
+def wallets_trx_during_round(wallet_id, api_key, chain_id, round_start, round_finish, list_for_testing):
 
 
         session = requests.Session() 
@@ -136,13 +136,16 @@ def donors_trx_during_round(wallet_id, api_key, chain_id, round_start, round_fin
                     if (round_start <= datetime.strptime(trx_data[i]['block_signed_at']
                                                      .split('T')[0], '%Y-%m-%d') < round_finish) == True:
 
-                        if (trx_data[i]['from_address'] != wallet_id) == True:
+                        if (trx_data[i]['from_address'] != wallet_id) & (trx_data[i]['from_address'] != None):
                             received_from  = trx_data[i]['from_address']
                             received_trx.append(received_from)          
 
                         else:
-                            sended_to  = trx_data[i]['to_address']
-                            destination_trx.append(sended_to) 
+                            
+                            if trx_data[i]['from_address'] != None:
+                                
+                                sended_to  = trx_data[i]['to_address']
+                                destination_trx.append(sended_to) 
 
 
 
