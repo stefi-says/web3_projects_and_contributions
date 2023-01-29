@@ -35,7 +35,7 @@ They could  test too differents relations like confront transactions:
 - donors x grantees 				
 - grantees X donors 		
 
-This could be done in different moments for different relations
+This could be done in different moments for different relations. For an ezample, please check [Exploratory_Data_Analysis_Bounty_Jan_2023](https://github.com/stefi-says/web3_projects_and_contributions/tree/main/Exploratory_Data_Analysis_Bounty_Jan_2023) that was build using this package.
  
 
 
