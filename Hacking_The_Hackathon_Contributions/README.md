@@ -20,4 +20,6 @@
 
 - [Reflection and Proposal about the community, node centralization and access](https://github.com/OpenDataforWeb3/Resources/wiki/Reflection-and-Proposal-about-the-community,-node-centralization-and-access) : wrote about a discussion we were having on our meeting about running nodes. I would like to bring some light on how accessible node hardware are outside rich countries, I pretend to carry this discussion as we are tending to run our node as a community 
 
+- [Fatom voters historical transaction till 23-01-23](https://github.com/OpenDataforWeb3/Resources/pull/112) made this dataset available to hackathon participants, during the ongoing hackathon so participants could test their Legos . Also, it will be included on our "Data Dictionary" page. 
+
 Besides that I’ve been an active discord member, been in all weekly meetings, spread the word about our community to my network through Linkedin as in [here](https://www.linkedin.com/feed/update/urn:li:activity:7019709391100592129/) , in twitter spaces I’ve tried to interact and make questions that would help other hackathon participants, and retweet a lot of our content.   
